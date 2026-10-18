@@ -21,5 +21,4 @@ public class ProPlayer extends Player{
     private Boolean isLocked;
     private Long lockedUntil;
 
-    public static Integer MINIMUM_MMR = 9000;
 }

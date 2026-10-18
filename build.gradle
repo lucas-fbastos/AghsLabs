@@ -37,7 +37,8 @@ tasks.named('bootJar') {
 }
 
 tasks.named('bootRun') {
-	args = ['--spring.profiles.active=local']
+	def activeProfile = project.findProperty('profile') ?: 'local'
+	args = ["--spring.profiles.active=${activeProfile}"]
 }
 
 tasks.named('test') {

@@ -78,7 +78,6 @@ public class DbService {
     public void seedProPlayers(){
         List<ProPlayer> proPlayersToPersist = openDotaProPlayerDataService.getProPlayers()
                 .stream()
-                .filter(p-> p.computedMmr() >= ProPlayer.MINIMUM_MMR)
                 .map(this::toProPlayerEntity)
                 .toList();
         this.proPlayerRepository.saveAll(proPlayersToPersist);
