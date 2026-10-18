@@ -76,7 +76,9 @@ public class DbService {
     private void seedHeroRoles(){ for(String role : ROLES) roleRepository.save(new Role(role));}
 
     public void seedProPlayers(){
-        List<ProPlayer> proPlayersToPersist = openDotaProPlayerDataService.getProPlayers().stream()
+        List<ProPlayer> proPlayersToPersist = openDotaProPlayerDataService.getProPlayers()
+                .stream()
+                .filter(p-> p.computedMmr() >= ProPlayer.MINIMUM_MMR)
                 .map(this::toProPlayerEntity)
                 .toList();
         this.proPlayerRepository.saveAll(proPlayersToPersist);
@@ -109,7 +111,9 @@ public class DbService {
     }
 
     private void saveHeroesFromApi(){
-        List<Hero> heroesToPersist = openDotaHeroDataService.getAll().values().stream()
+        List<Hero> heroesToPersist = openDotaHeroDataService.getAll()
+                .values()
+                .stream()
                 .map(this::toHeroEntity)
                 .toList();
         heroRepository.saveAll(heroesToPersist);
