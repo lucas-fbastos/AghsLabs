@@ -1,0 +1,31 @@
+spring:
+  config:
+    import: classpath:external-data-providers.yaml
+  web:
+    locale-resolver: fixed
+    locale: pt_BR
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+  jpa:
+    hibernate:
+      ddl-auto: update
+      generate-ddl: true
+    properties:
+      hibernate:
+        jdbc:
+          batch_size: 500
+        order_inserts: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+  sql:
+    init:
+      continue-on-error: true
+  datasource:
+    driver-class-name: org.postgresql.Driver
+hibernate:
+  temp:
+    use_jdbc_metadata_defaults: true

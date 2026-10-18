@@ -5,6 +5,8 @@ import io.luck.AghsLabs.model.MatchDetailsData.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import java.time.Duration;
 import java.util.Set;
 import java.util.List;
@@ -14,9 +16,12 @@ import tools.jackson.databind.JsonNode;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Match {
     private Integer version;
     private Long matchId;
+    private Long averageMmr;
     private List<Teamfight> teamfights;
     private List<Pause> pauses;
     private List<Objective> objectives;

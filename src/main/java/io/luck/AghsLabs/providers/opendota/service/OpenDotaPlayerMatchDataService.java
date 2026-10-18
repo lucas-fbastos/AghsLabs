@@ -26,6 +26,10 @@ public class OpenDotaPlayerMatchDataService {
             "hero_healing", "lane", "lane_role", "item_0", "item_1", "item_2",
             "item_3", "item_4", "item_5"
     };
+    private static final String[] FEATURED_WIN_PROJECT = {
+            "match_id", "player_slot", "radiant_win", "duration", "game_mode",
+            "hero_id", "start_time", "kills", "deaths", "assists"
+    };
 
     private final RestClient restClient;
 
@@ -55,6 +59,23 @@ public class OpenDotaPlayerMatchDataService {
                     .body(new ParameterizedTypeReference<>() {});
         } catch (RestClientException exception) {
             throw new ExternalApiException("Unable to load OpenDota matches for player " + playerId, exception);
+        }
+    }
+
+    public OpenDotaPlayerMatchCandidate getLatestWonMatch(@NonNull Long playerId) {
+        try {
+            List<OpenDotaPlayerMatchCandidate> matches = restClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("players/{playerId}/matches")
+                            .queryParam("win", 1)
+                            .queryParam("limit", 1)
+                            .queryParam("project", (Object[]) FEATURED_WIN_PROJECT)
+                            .build(playerId))
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<>() {});
+            return matches == null || matches.isEmpty() ? null : matches.getFirst();
+        } catch (RestClientException exception) {
+            throw new ExternalApiException("Unable to load a recent win for player " + playerId, exception);
         }
     }
 

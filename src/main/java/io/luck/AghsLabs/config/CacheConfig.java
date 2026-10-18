@@ -18,6 +18,7 @@ public class CacheConfig {
     public static final String MATCH_DETAILS = "matchDetails";
     public static final String COMPARISON_OVERVIEWS = "comparisonOverviews";
     public static final String DEEP_COMPARISONS = "deepComparisons";
+    public static final String FEATURED_PRO_PLAYERS = "featuredProPlayers";
 
     @Bean
     public CacheManager cacheManager() {
@@ -41,6 +42,10 @@ public class CacheConfig {
         manager.registerCustomCache(DEEP_COMPARISONS, Caffeine.newBuilder()
                 .maximumSize(5_000)
                 .expireAfterWrite(Duration.ofHours(1))
+                .build());
+        manager.registerCustomCache(FEATURED_PRO_PLAYERS, Caffeine.newBuilder()
+                .maximumSize(1)
+                .expireAfterWrite(Duration.ofDays(5))
                 .build());
         return manager;
     }

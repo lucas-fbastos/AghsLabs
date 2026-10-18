@@ -12,6 +12,11 @@ import java.util.List;
 @Repository
 public interface ProPlayerRepository extends JpaRepository<ProPlayer,Long> {
 
+    List<ProPlayer> findByPlayerRoleOrderByLastLoginDescAccountIdAsc(
+            Integer playerRole,
+            Pageable pageable
+    );
+
     @Query("""
             SELECT pro
             FROM ProPlayer pro

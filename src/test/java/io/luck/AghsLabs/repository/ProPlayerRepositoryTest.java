@@ -73,6 +73,23 @@ class ProPlayerRepositoryTest {
         assertEquals(List.of(1L, 2L), results.stream().map(ProPlayer::getAccountId).toList());
     }
 
+    @Test
+    void featuredCandidatesAreFilteredByRoleOrderedByActivityAndLimited() {
+        proPlayerRepository.saveAllAndFlush(List.of(
+                featuredPlayer(1L, 1, "2026-01-01T00:00:00Z"),
+                featuredPlayer(2L, 1, "2026-03-01T00:00:00Z"),
+                featuredPlayer(3L, 1, "2026-02-01T00:00:00Z"),
+                featuredPlayer(4L, 2, "2026-04-01T00:00:00Z"),
+                featuredPlayer(5L, null, "2026-05-01T00:00:00Z")
+        ));
+
+        var results = proPlayerRepository.findByPlayerRoleOrderByLastLoginDescAccountIdAsc(
+                1, PageRequest.of(0, 2)
+        );
+
+        assertEquals(List.of(2L, 3L), results.stream().map(ProPlayer::getAccountId).toList());
+    }
+
     private ProPlayer player(
             Long accountId,
             String personaName,
@@ -86,6 +103,13 @@ class ProPlayerRepositoryTest {
         player.setName(name);
         player.setTeamName(teamName);
         player.setTeamTag(teamTag);
+        return player;
+    }
+
+    private ProPlayer featuredPlayer(Long accountId, Integer playerRole, String lastLogin) {
+        var player = player(accountId, "Player " + accountId, null, null, null);
+        player.setPlayerRole(playerRole);
+        player.setLastLogin(lastLogin);
         return player;
     }
 }

@@ -83,7 +83,7 @@ class MatchResourceTest {
     @Test
     void existingMatchRoutesKeepTheirPaths() throws Exception {
         var service = mock(MatchService.class);
-        when(service.getMatchDetails(123L)).thenReturn(new Match());
+        when(service.getMatchDetails(123L)).thenReturn(Match.builder().build());
         when(service.getRecentMatches(123L)).thenReturn(List.of());
         when(service.getWinLose(123L)).thenReturn(OpenDotaPlayerRatio.DEFAULT);
         var mvc = MockMvcBuilders.standaloneSetup(new MatchResource(service)).build();

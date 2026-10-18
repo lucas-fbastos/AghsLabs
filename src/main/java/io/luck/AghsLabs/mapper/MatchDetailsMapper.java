@@ -22,69 +22,86 @@ public class MatchDetailsMapper {
     }
 
     public Match convert(OpenDotaPlayerMatchDetails source, Map<Long, Hero> heroesById, Map<Long, Item> itemsById) {
-        Match match = new Match();
-        match.setVersion(source.version());
-        match.setMatchId(source.matchId());
-        match.setTeamfights(MatchDetailsDataMapper.mapList(source.teamfights(), MatchDetailsDataMapper::convert));
-        match.setPauses(MatchDetailsDataMapper.mapList(source.pauses(), MatchDetailsDataMapper::convert));
-        match.setObjectives(MatchDetailsDataMapper.mapList(source.objectives(), MatchDetailsDataMapper::convert));
-        match.setRadiantGoldAdv(source.radiantGoldAdv());
-        match.setRadiantXpAdv(source.radiantXpAdv());
-        match.setDraftTimings(MatchDetailsDataMapper.mapList(source.draftTimings(), MatchDetailsDataMapper::convert));
-        match.setLeagueId(source.leagueId());
-        match.setStartTime(source.startTime());
-        match.setDuration(source.duration() == null ? null : Duration.ofSeconds(source.duration()));
-        match.setSeriesId(source.seriesId());
-        match.setSeriesType(source.seriesType());
-        match.setCluster(source.cluster());
-        match.setReplaySalt(source.replaySalt());
-        match.setRadiantWin(source.radiantWin());
-        match.setPreGameDuration(source.preGameDuration());
-        match.setMatchSeqNum(source.matchSeqNum());
-        match.setTowerStatusRadiant(source.towerStatusRadiant());
-        match.setTowerStatusDire(source.towerStatusDire());
-        match.setBarracksStatusRadiant(source.barracksStatusRadiant());
-        match.setBarracksStatusDire(source.barracksStatusDire());
-        match.setFirstBloodTime(source.firstBloodTime());
-        match.setLobbyType(source.lobbyType());
-        match.setHumanPlayers(source.humanPlayers());
-        match.setGameMode(source.gameMode() == null ? null : GameMode.getById(source.gameMode()).orElse(null));
-        match.setFlags(source.flags());
-        match.setEngine(source.engine());
-        match.setRadiantScore(source.radiantScore());
-        match.setDireScore(source.direScore());
-        match.setRadiantTeamId(source.radiantTeamId());
-        match.setRadiantName(source.radiantName());
-        match.setRadiantLogo(source.radiantLogo());
-        match.setRadiantTeamComplete(source.radiantTeamComplete());
-        match.setDireTeamId(source.direTeamId());
-        match.setDireName(source.direName());
-        match.setDireLogo(source.direLogo());
-        match.setDireTeamComplete(source.direTeamComplete());
-        match.setRadiantCaptain(source.radiantCaptain());
-        match.setDireCaptain(source.direCaptain());
-        match.setPicksBans(MatchDetailsDataMapper.mapList(source.picksBans(), MatchDetailsDataMapper::convert));
-        match.setOdData(MatchDetailsDataMapper.convert(source.odData()));
-        match.setLeague(MatchDetailsDataMapper.convert(source.league()));
-        match.setRadiantTeamInfo(MatchDetailsDataMapper.convert(source.radiantTeam()));
-        match.setDireTeamInfo(MatchDetailsDataMapper.convert(source.direTeam()));
-        match.setMetadata(source.metadata());
-        match.setReplayUrl(source.replayUrl());
-        match.setPatch(source.patch());
-        match.setRegion(source.region());
-        match.setThrowAmount(source.throwAmount());
-        match.setLoss(source.loss());
         Set<MatchPlayer> players = matchPlayerMapper.convert(source.players(), heroesById, itemsById);
-        match.setPlayers(new ArrayList<>(players));
         Set<MatchPlayer> radiant = new LinkedHashSet<>();
         Set<MatchPlayer> dire = new LinkedHashSet<>();
-        for (var player : players) {
-            if (Faction.RADIANT.name().equals(player.team())) radiant.add(player);
-            else dire.add(player);
+
+        boolean invalidMmr = players.stream()
+                .anyMatch(p -> p.computedMmr() == null || p.computedMmr() == 0);
+
+        long averageMmr = 0;
+        if(!invalidMmr){
+            averageMmr = players.stream()
+                    .mapToInt(MatchPlayer::computedMmr)
+                    .sum()
+                    / players.size();
         }
-        match.setRadiantTeam(radiant);
-        match.setDireTeam(dire);
-        return match;
+
+        for (var player : players) {
+            if (Faction.RADIANT.name().equals(player.team()))
+                radiant.add(player);
+            else
+                dire.add(player);
+        }
+        averageMmr = averageMmr/players.size();
+
+       return Match.builder()
+                .version(source.version())
+                .matchId(source.matchId())
+                .teamfights(MatchDetailsDataMapper.mapList(source.teamfights(), MatchDetailsDataMapper::convert))
+                .pauses(MatchDetailsDataMapper.mapList(source.pauses(), MatchDetailsDataMapper::convert))
+                .objectives(MatchDetailsDataMapper.mapList(source.objectives(), MatchDetailsDataMapper::convert))
+                .radiantGoldAdv(source.radiantGoldAdv())
+                .radiantXpAdv(source.radiantXpAdv())
+                .draftTimings(MatchDetailsDataMapper.mapList(source.draftTimings(), MatchDetailsDataMapper::convert))
+                .leagueId(source.leagueId())
+                .startTime(source.startTime())
+                .duration(source.duration() == null ? null : Duration.ofSeconds(source.duration()))
+                .seriesId(source.seriesId())
+                .seriesType(source.seriesType())
+                .cluster(source.cluster())
+                .replaySalt(source.replaySalt())
+                .radiantWin(source.radiantWin())
+                .preGameDuration(source.preGameDuration())
+                .matchSeqNum(source.matchSeqNum())
+                .towerStatusRadiant(source.towerStatusRadiant())
+                .towerStatusDire(source.towerStatusDire())
+                .barracksStatusRadiant(source.barracksStatusRadiant())
+                .barracksStatusDire(source.barracksStatusDire())
+                .firstBloodTime(source.firstBloodTime())
+                .lobbyType(source.lobbyType())
+                .humanPlayers(source.humanPlayers())
+                .gameMode(source.gameMode() == null ? null : GameMode.getById(source.gameMode()).orElse(null))
+                .flags(source.flags())
+                .engine(source.engine())
+                .radiantScore(source.radiantScore())
+                .direScore(source.direScore())
+                .radiantTeamId(source.radiantTeamId())
+                .radiantName(source.radiantName())
+                .radiantLogo(source.radiantLogo())
+                .radiantTeamComplete(source.radiantTeamComplete())
+                .direTeamId(source.direTeamId())
+                .direName(source.direName())
+                .direLogo(source.direLogo())
+                .direTeamComplete(source.direTeamComplete())
+                .radiantCaptain(source.radiantCaptain())
+                .direCaptain(source.direCaptain())
+                .picksBans(MatchDetailsDataMapper.mapList(source.picksBans(), MatchDetailsDataMapper::convert))
+                .odData(MatchDetailsDataMapper.convert(source.odData()))
+                .league(MatchDetailsDataMapper.convert(source.league()))
+                .radiantTeamInfo(MatchDetailsDataMapper.convert(source.radiantTeam()))
+                .direTeamInfo(MatchDetailsDataMapper.convert(source.direTeam()))
+                .metadata(source.metadata())
+                .replayUrl(source.replayUrl())
+                .patch(source.patch())
+                .region(source.region())
+                .throwAmount(source.throwAmount())
+                .loss(source.loss())
+                .players(new ArrayList<>(players))
+                .averageMmr(averageMmr)
+                .radiantTeam(radiant)
+                .direTeam(dire)
+                .build();
     }
 
     public MatchChat convertChat(OpenDotaPlayerMatchDetails source) {
@@ -106,15 +123,19 @@ public class MatchDetailsMapper {
 
     public MatchWards convertWards(OpenDotaPlayerMatchDetails source) {
         if (source.players() == null) return new MatchWards(List.of());
-        return new MatchWards(MatchDetailsDataMapper.mapList(source.players(), player ->
-                new MatchWards.PlayerWards(
-                        player.playerSlot(),
-                        player.accountId(),
-                        player.heroId(),
-                        MatchDetailsDataMapper.mapList(player.obsLog(), MatchDetailsDataMapper::convert),
-                        MatchDetailsDataMapper.mapList(player.senLog(), MatchDetailsDataMapper::convert),
-                        MatchDetailsDataMapper.mapList(player.obsLeftLog(), MatchDetailsDataMapper::convert),
-                        MatchDetailsDataMapper.mapList(player.senLeftLog(), MatchDetailsDataMapper::convert)
-                )));
+        return new MatchWards(
+                MatchDetailsDataMapper.mapList(
+                    source.players(), player ->
+                        new MatchWards.PlayerWards(
+                                player.playerSlot(),
+                                player.accountId(),
+                                player.heroId(),
+                                MatchDetailsDataMapper.mapList(player.obsLog(), MatchDetailsDataMapper::convert),
+                                MatchDetailsDataMapper.mapList(player.senLog(), MatchDetailsDataMapper::convert),
+                                MatchDetailsDataMapper.mapList(player.obsLeftLog(), MatchDetailsDataMapper::convert),
+                                MatchDetailsDataMapper.mapList(player.senLeftLog(), MatchDetailsDataMapper::convert)
+                        )
+                )
+        );
     }
 }

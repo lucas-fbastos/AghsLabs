@@ -16,7 +16,8 @@ class CacheConfigTest {
                 CacheConfig.PLAYER_MATCH_CANDIDATES,
                 CacheConfig.MATCH_DETAILS,
                 CacheConfig.COMPARISON_OVERVIEWS,
-                CacheConfig.DEEP_COMPARISONS
+                CacheConfig.DEEP_COMPARISONS,
+                CacheConfig.FEATURED_PRO_PLAYERS
         }) {
             var cache = manager.getCache(name);
             assertNotNull(cache, name);

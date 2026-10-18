@@ -89,6 +89,7 @@ public class MatchService {
                 .flatMap(player -> player.getItems().stream())
                 .filter(id -> id != null && id > 0)
                 .collect(Collectors.toSet());
+
         Map<Long, Item> itemsById = itemService.getAllById(itemIds).stream()
                 .collect(Collectors.toMap(Item::getItemId, Function.identity()));
 
