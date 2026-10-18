@@ -1,0 +1,15 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    jdbc-url: ${spring.datasource.url}
+  sql:
+    init:
+      platform: postgres
+  jpa:
+    properties:
+      hibernate:
+        default_schema: public
+        format_sql: true
+    show-sql: true
