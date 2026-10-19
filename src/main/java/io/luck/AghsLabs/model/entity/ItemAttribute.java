@@ -9,6 +9,7 @@ import lombok.*;
 @Getter
 @Entity
 @AllArgsConstructor
+@Builder
 @EqualsAndHashCode
 @Table(name="item_attribute",schema = "public")
 @NoArgsConstructor

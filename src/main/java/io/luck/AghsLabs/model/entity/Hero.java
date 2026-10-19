@@ -12,6 +12,7 @@ import org.hibernate.annotations.FetchMode;
 import java.util.List;
 
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)

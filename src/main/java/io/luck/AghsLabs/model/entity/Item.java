@@ -9,6 +9,7 @@ import java.util.List;
 
 
 @AllArgsConstructor
+@Builder
 @Getter
 @Setter
 @EqualsAndHashCode(callSuper = false)

@@ -3,6 +3,7 @@ package io.luck.AghsLabs.model.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
@@ -10,7 +11,7 @@ import lombok.*;
 @EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @Entity
-@Builder
+@SuperBuilder
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name="player", schema ="public")
 public class Player extends AssignedIdEntity<Long> {

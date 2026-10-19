@@ -73,7 +73,9 @@ public class DbService {
     }
 
     private void seedHeroRoles() {
-        var roles  = Arrays.stream(ROLES).map(Role::new).collect(Collectors.toSet());
+        var roles = Arrays.stream(ROLES)
+                .map(description -> Role.builder().description(description).build())
+                .collect(Collectors.toSet());
         roleRepository.saveAll(roles);
     }
 
@@ -88,29 +90,26 @@ public class DbService {
     }
 
     private ProPlayer toProPlayerEntity(OpenDotaProPlayer player) {
-        ProPlayer proPlayer = new ProPlayer(
-                player.teamName(),
-                player.teamTag(),
-                player.fantasyRole(),
-                player.teamId(),
-                player.isLocked(),
-                player.lockedUntil()
-        );
-
-        proPlayer.setAccountId(player.accountId());
-        proPlayer.setMmrEstimate(player.computedMmr());
-        proPlayer.setPersonaName(player.personaName());
-        proPlayer.setName(player.name());
-        proPlayer.setCheese(player.cheese());
-        proPlayer.setSteamId(player.steamId());
-        proPlayer.setAvatarImage(player.avatar());
-        proPlayer.setAvatarImageMedium(player.avatarMedium());
-        proPlayer.setAvatarImageFull(player.avatarFull());
-        proPlayer.setProfileURL(player.profileUrl());
-        proPlayer.setLastLogin(player.lastLogin());
-        proPlayer.setLocCountryCode(player.locCountryCode());
-
-        return proPlayer;
+        return ProPlayer.builder()
+                .accountId(player.accountId())
+                .mmrEstimate(player.computedMmr())
+                .personaName(player.personaName())
+                .name(player.name())
+                .cheese(player.cheese())
+                .steamId(player.steamId())
+                .avatarImage(player.avatar())
+                .avatarImageMedium(player.avatarMedium())
+                .avatarImageFull(player.avatarFull())
+                .profileURL(player.profileUrl())
+                .lastLogin(player.lastLogin())
+                .locCountryCode(player.locCountryCode())
+                .teamName(player.teamName())
+                .teamTag(player.teamTag())
+                .playerRole(player.fantasyRole())
+                .teamId(player.teamId())
+                .isLocked(player.isLocked())
+                .lockedUntil(player.lockedUntil())
+                .build();
     }
 
     private void saveHeroesFromApi() {
@@ -132,16 +131,16 @@ public class DbService {
                 .filter(Objects::nonNull)
                 .distinct()
                 .toList();
-        return new Hero(
-                hero.id(),
-                hero.name(),
-                hero.localizedName(),
-                hero.primaryAttribute(),
-                hero.attackType(),
-                hero.img(),
-                hero.icon(),
-                roles
-        );
+        return Hero.builder()
+                .id(hero.id())
+                .name(hero.name())
+                .localizedName(hero.localizedName())
+                .primaryAttribute(hero.primaryAttribute())
+                .attackType(hero.attackType())
+                .image(hero.img())
+                .icon(hero.icon())
+                .roles(roles)
+                .build();
     }
 
     private void seedItems() {
@@ -156,7 +155,11 @@ public class DbService {
     }
 
     private Patch toPatchEntity(OpenDotaPatch patch) {
-        return new Patch(patch.id(), patch.date(), patch.name());
+        return Patch.builder()
+                .id(patch.id())
+                .date(patch.date())
+                .name(patch.name())
+                .build();
     }
 
     public void seedAbilities() {
@@ -169,11 +172,11 @@ public class DbService {
         List<Ability> abilitiesToPersist = openDotaAbilityDataService.getIds().stream()
                 .map(abilityId -> {
                     OpenDotaAbility ability = abilityData.get(abilityId.name());
-                    return new Ability(
-                            abilityId.id(),
-                            ability == null ? null : ability.displayName(),
-                            ability == null ? null : ability.img()
-                    );
+                    return Ability.builder()
+                            .id(abilityId.id())
+                            .name(ability == null ? null : ability.displayName())
+                            .icon(ability == null ? null : ability.img())
+                            .build();
                 })
                 .toList();
 

@@ -7,6 +7,7 @@ import jakarta.persistence.Table;
 import jakarta.persistence.Id;
 import jakarta.persistence.GenerationType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -16,6 +17,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "role", schema ="public")
 @AllArgsConstructor
+@Builder
 @NoArgsConstructor
 public class Role {
 
