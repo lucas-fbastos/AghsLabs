@@ -1,18 +1,19 @@
 package io.luck.AghsLabs.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
 @Setter
 @AllArgsConstructor
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @NoArgsConstructor
 @Entity
 @Builder
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @Table(name="player", schema ="public")
-public class Player {
+public class Player extends AssignedIdEntity<Long> {
 
     @Id
     private Long accountId;
@@ -44,4 +45,10 @@ public class Player {
 
     private Boolean subscriber;
 
+    @Override
+    @Transient
+    @JsonIgnore
+    public Long getId() {
+        return accountId;
+    }
 }

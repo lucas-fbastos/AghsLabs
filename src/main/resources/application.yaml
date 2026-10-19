@@ -10,7 +10,7 @@ spring:
       force: true
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
       generate-ddl: true
     properties:
       hibernate:

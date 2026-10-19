@@ -10,8 +10,6 @@ import io.luck.AghsLabs.providers.opendota.service.OpenDotaPatchDataService;
 import io.luck.AghsLabs.providers.opendota.service.OpenDotaProPlayerDataService;
 import io.luck.AghsLabs.repository.AbilityRepository;
 import io.luck.AghsLabs.repository.HeroRepository;
-import io.luck.AghsLabs.repository.ItemAttributeRepository;
-import io.luck.AghsLabs.repository.ItemRepository;
 import io.luck.AghsLabs.repository.PatchRepository;
 import io.luck.AghsLabs.repository.ProPlayerRepository;
 import io.luck.AghsLabs.repository.RoleRepository;
@@ -50,8 +48,7 @@ class DbServiceTest {
                 mock(OpenDotaItemDataService.class),
                 mock(OpenDotaPatchDataService.class),
                 mock(OpenDotaProPlayerDataService.class),
-                mock(ItemAttributeRepository.class),
-                mock(ItemRepository.class),
+                mock(ItemSeedService.class),
                 mock(PatchRepository.class),
                 abilityRepository,
                 abilityDataService

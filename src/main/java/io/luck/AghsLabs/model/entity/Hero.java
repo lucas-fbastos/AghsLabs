@@ -14,11 +14,11 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "hero", schema ="public")
 @NoArgsConstructor
-public class Hero {
+public class Hero extends AssignedIdEntity<Long> {
 
     @Id
     private Long id;

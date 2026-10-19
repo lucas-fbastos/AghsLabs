@@ -12,11 +12,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name = "ability", schema = "public")
 @NoArgsConstructor
-public class Ability {
+public class Ability extends AssignedIdEntity<Long> {
 
     @Id
     private Long id;

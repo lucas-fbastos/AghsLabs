@@ -16,7 +16,7 @@ import java.time.Instant;
 @Entity
 @Table(name="patch",schema = "public")
 @NoArgsConstructor
-public class Patch {
+public class Patch extends AssignedIdEntity<Integer> {
     @Id
     private Integer id;
     private Instant date;

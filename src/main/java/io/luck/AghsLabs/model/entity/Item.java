@@ -1,5 +1,6 @@
 package io.luck.AghsLabs.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.Fetch;
@@ -10,11 +11,11 @@ import java.util.List;
 @AllArgsConstructor
 @Getter
 @Setter
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 @Entity
 @Table(name="item",schema = "public")
 @NoArgsConstructor
-public class Item {
+public class Item extends AssignedIdEntity<Long> {
     @Id
     @Column(name="item_id")
     private Long itemId;
@@ -32,4 +33,11 @@ public class Item {
     private String notes;
     @Column(columnDefinition="TEXT")
     private String lore;
+
+    @Override
+    @Transient
+    @JsonIgnore
+    public Long getId() {
+        return itemId;
+    }
 }
